@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Spawn
   - StartTime
+  - Plataform
   layers:
   - Default
   - TransparentFX

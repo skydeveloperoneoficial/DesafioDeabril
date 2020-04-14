@@ -2,29 +2,36 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using UnityStandardAssets._2D;
 public class StartTimeBehaviou : MonoBehaviour
 {
     SpawnControl2D spawnControl;
-
-    public float countTime;
-    public float timeStop;
-    public bool StopTime;
+    private UIController timeUI,GameOverUI;
+    public PlatformerCharacter2D platformerCharacterRobot;
+    public int countTime;
+    public int timeStop;
+    public  int currentTime;
+    public bool StopTime,StopOut;
     public string time;
-    public Text time_;
+
+    //public Text time_;
 
     // Start is called before the first frame update
     void Start()
     {
         spawnControl = FindObjectOfType(typeof(SpawnControl2D)) as SpawnControl2D;
 
-        countTime = Time.deltaTime;
+        countTime =(int) Time.time;
         //spawnControl.gameObject.SetActive(false);
         spawnControl.ChangeState(StateDirectionSpawn.Disable);
+        timeUI = FindObjectOfType(typeof(UIController)) as UIController;
+        GameOverUI= FindObjectOfType(typeof(UIController)) as UIController;
+        platformerCharacterRobot = FindObjectOfType(typeof(PlatformerCharacter2D)) as PlatformerCharacter2D;
+        //time_ = FindObjectOfType(typeof(Text)) as Text;
 
-
-        time_ = FindObjectOfType(typeof(Text)) as Text;
-
-        StopTime= true;
+        StopTime = true;
+        StopOut =  true;
     }
 
     // Update is called once per frame
@@ -34,14 +41,27 @@ public class StartTimeBehaviou : MonoBehaviour
         if (countTime == timeStop)
         {
             StopTime = true;
+            GameOverUI.UI[0].gameObject.SetActive(true);
+            
+            platformerCharacterRobot.gameObject.SetActive(false);
+            
+            spawnControl.ChangeState(StateDirectionSpawn.Disable);
+
+            
+
         }
         if (!StopTime)
         {
             countTime++;
         }
-        //Debug.Log(time + countTime.ToString("00:00"));
-        time_.text = "Horario:"+countTime.ToString("00:00");
+        if (StopOut)
+        {
+            countTime = currentTime;
+        }
         
+        //Debug.Log(time + countTime.ToString("00:00"));
+        //time_.text = "Horario:"+countTime.ToString("00:00");
+        timeUI.UI[1].text = "Horario:" + countTime.ToString("00:00");
 
     }
 
@@ -51,9 +71,11 @@ public class StartTimeBehaviou : MonoBehaviour
         {
 
             spawnControl.ChangeState(StateDirectionSpawn.SpawnVetical);
+
             StopTime = false;
-           
-            //Debug.Log("test");
+            StopOut = false;
+            Debug.Log("test");
+            
         }
     }
 
